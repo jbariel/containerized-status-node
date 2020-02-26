@@ -22,7 +22,7 @@ WORKDIR /home
 
 COPY package.json LICENSE lib ./
 
-RUN apk add -U nodejs npm && npm install --production
+RUN apk add --no-cache -U nodejs npm && npm install --production
 
 EXPOSE 8888
 
