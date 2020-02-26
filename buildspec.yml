@@ -35,7 +35,7 @@ phases:
       - echo Setting up Docker as part of the install phase
       - echo Logging into AWS ECR
       # This is for CLI v2 -> looks like AWS is still using CLI v1 for CB
-      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_BASE
+      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.$ECR_BASE
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
     finally:
       - echo Install finshed on `date`
