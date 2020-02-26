@@ -3,6 +3,7 @@ certs
 coverage
 *.log
 .DS_Store
+.vscode
 
 
 # Logs

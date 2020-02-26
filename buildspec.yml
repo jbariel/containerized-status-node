@@ -1,0 +1,56 @@
+##################################################################
+## Licensed to the Apache Software Foundation (ASF) under one   ##
+## or more contributor license agreements.  See the NOTICE file ##
+## distributed with this work for additional information        ##
+## regarding copyright ownership.  The ASF licenses this file   ##
+## to you under the Apache License, Version 2.0 (the            ##
+## "License"); you may not use this file except in compliance   ##
+## with the License.  You may obtain a copy of the License at   ##
+##                                                              ##
+##   http://www.apache.org/licenses/LICENSE-2.0                 ##
+##                                                              ##
+## Unless required by applicable law or agreed to in writing,   ##
+## software distributed under the License is distributed on an  ##
+## "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       ##
+## KIND, either express or implied.  See the License for the    ##
+## specific language governing permissions and limitations      ##
+## under the License.                                           ##
+##################################################################
+
+version: 0.2
+
+env:
+  variables:
+    ECR_BASE: "739750115356.dkr.ecr.us-east-2.amazonaws.com"
+    CONTAINER_NAME: "containerized-status-node"
+    AWS_DEFAULT_REGION: "us-east-2"
+  parameter-store:
+    AWS_ACCESS_KEY_ID: "/cb/aws/key/id"
+    AWS_SECRET_ACCESS_KEY: "/cb/aws/key/secret"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      - echo Setting up Docker as part of the install phase
+      - echo Logging into AWS ECR
+      - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_BASE
+    finally:
+      - echo Install finshed on `date`
+  pre_build:
+    commands:
+      - echo Entering the pre-build phase
+  build:
+    commands:
+      - echo Entering the build phase - creating the Docker image
+      - docker build -t $CONTAINER_NAME .
+      - docker tag $CONTAINER_NAME $ECR_BASE/$CONTAINER_NAME:latest
+    finally:
+      - echo Build finshed on `date`
+  post_build:
+    commands:
+      - echo Entering post build phase - pushing the image to ECR
+      - docker push $ECR_BASE/$CONTAINER_NAME:latest
+    finally:
+      - echo Post-build finshed on `date`
