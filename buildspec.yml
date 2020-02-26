@@ -21,21 +21,22 @@ version: 0.2
 
 env:
   variables:
-    ECR_BASE: "739750115356.dkr.ecr.us-east-2.amazonaws.com"
+    ECR_BASE: "dkr.ecr.us-east-2.amazonaws.com"
     CONTAINER_NAME: "containerized-status-node"
     AWS_DEFAULT_REGION: "us-east-2"
   parameter-store:
+    AWS_ACCOUNT_ID: "/cb/aws/acct/id"
     AWS_ACCESS_KEY_ID: "/cb/aws/key/id"
     AWS_SECRET_ACCESS_KEY: "/cb/aws/key/secret"
 
 phases:
   install:
-    runtime-versions:
-      docker: 18
     commands:
       - echo Setting up Docker as part of the install phase
       - echo Logging into AWS ECR
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_BASE
+      # This is for CLI v2 -> looks like AWS is still using CLI v1 for CB
+      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_BASE
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
     finally:
       - echo Install finshed on `date`
   pre_build:
@@ -45,12 +46,12 @@ phases:
     commands:
       - echo Entering the build phase - creating the Docker image
       - docker build -t $CONTAINER_NAME .
-      - docker tag $CONTAINER_NAME $ECR_BASE/$CONTAINER_NAME:latest
+      - docker tag $CONTAINER_NAME $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
     finally:
       - echo Build finshed on `date`
   post_build:
     commands:
       - echo Entering post build phase - pushing the image to ECR
-      - docker push $ECR_BASE/$CONTAINER_NAME:latest
+      - docker push $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
     finally:
       - echo Post-build finshed on `date`
