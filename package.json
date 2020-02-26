@@ -1,0 +1,38 @@
+{
+  "name": "containerized-status-node",
+  "version": "1.0.0",
+  "description": "containerized node app that shows status for PaaS/CaaS deployments",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --coverage --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbariel/containerized-status-node.git"
+  },
+  "keywords": [
+    "node",
+    "containers",
+    "example"
+  ],
+  "author": "Jarrett Bariel",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jbariel/containerized-status-node/issues"
+  },
+  "homepage": "https://github.com/jbariel/containerized-status-node#readme",
+  "engines": {
+    "node": ">10.0.0",
+    "npm": ">6.9.0"
+  },
+  "dependencies": {
+    "output-manager": "^3.0.0",
+    "server-lite": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "jest": {
+    "verbose": true
+  }
+}
