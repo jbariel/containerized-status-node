@@ -42,10 +42,12 @@ phases:
   pre_build:
     commands:
       - echo Entering the pre-build phase
+      - export APP_BUILD_VERSION=$(date +"%Y%m%d%H%M%S.%s")
   build:
     commands:
       - echo Entering the build phase - creating the Docker image
-      - docker build --build-arg SVC_PORT=$PORT --build-arg APP_VERSION=$(date +"%Y%m%d%H%M%S.%s") -t $CONTAINER_NAME .
+      - docker build --build-arg SVC_PORT=$PORT --build-arg APP_VERSION=$APP_BUILD_VERSION -t $CONTAINER_NAME .
+      - docker tag $CONTAINER_NAME $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:$APP_BUILD_VERSION
       - docker tag $CONTAINER_NAME $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
     finally:
       - echo Build finshed on `date`
@@ -53,5 +55,6 @@ phases:
     commands:
       - echo Entering post build phase - pushing the image to ECR
       - docker push $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
+      - docker push $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:$APP_BUILD_VERSION
     finally:
       - echo Post-build finshed on `date`
