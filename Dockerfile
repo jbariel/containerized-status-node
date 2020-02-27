@@ -20,10 +20,14 @@ FROM alpine:latest
 
 WORKDIR /home
 
+ARG SVC_PORT;
+
+ENV PORT=${SVC_PORT}
+
 COPY package.json LICENSE lib ./
 
 RUN apk add --no-cache -U nodejs npm && npm install --production
 
-EXPOSE 8888
+EXPOSE ${SVC_PORT}
 
 CMD [ "node", "index.js" ]
