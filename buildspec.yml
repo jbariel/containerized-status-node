@@ -56,6 +56,6 @@ phases:
       - echo Entering post build phase - pushing the image to ECR
       - docker push $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
       - docker push $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:$APP_BUILD_VERSION
-      - aws ecs update-service --service ${CONTAINER_NAME}-svc --force-new-deployment --region $AWS_DEFAULT_REGION
+      - aws ecs update-service --cluster my-new-cluster --service ${CONTAINER_NAME}-svc --force-new-deployment --region $AWS_DEFAULT_REGION
     finally:
       - echo Post-build finshed on `date`
