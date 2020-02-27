@@ -20,7 +20,7 @@ FROM alpine:latest
 
 WORKDIR /home
 
-ARG SVC_PORT;
+ARG SVC_PORT
 
 ENV PORT=${SVC_PORT}
 
