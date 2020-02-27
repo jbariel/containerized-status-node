@@ -50,7 +50,7 @@ phases:
       - docker tag $CONTAINER_NAME $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:$APP_BUILD_VERSION
       - docker tag $CONTAINER_NAME $AWS_ACCOUNT_ID.$ECR_BASE/$CONTAINER_NAME:latest
     finally:
-      - echo Build finshed on `date`
+      - echo Build $APP_BUILD_VERSION finshed on `date`
   post_build:
     commands:
       - echo Entering post build phase - pushing the image to ECR
